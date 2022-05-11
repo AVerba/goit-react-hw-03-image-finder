@@ -3,13 +3,16 @@ import { Searchbar } from './Searchbar';
 
 export class App extends Component {
   state = {
-    query: '',
+    searchQuery: '',
+  };
+  formSubmitHandler = searchQuery => {
+    this.setState({ searchQuery });
   };
 
   render() {
     return (
       <div>
-        <Searchbar />
+        <Searchbar onSubmit={this.formSubmitHandler} />
       </div>
     );
   }

@@ -1,5 +1,7 @@
 import { Component } from 'react';
 import styles from './Searchbar.module.css';
+import PropTypes from 'prop-types';
+import { Input } from '../ui/Input';
 
 export class Searchbar extends Component {
   state = {
@@ -36,3 +38,7 @@ export class Searchbar extends Component {
     );
   }
 }
+
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
