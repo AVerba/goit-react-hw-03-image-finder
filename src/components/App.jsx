@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Searchbar } from './Searchbar';
 
 export class App extends Component {
   state = {
@@ -6,6 +7,10 @@ export class App extends Component {
   };
 
   render() {
-    return <div>hello</div>;
+    return (
+      <div>
+        <Searchbar />
+      </div>
+    );
   }
 }
