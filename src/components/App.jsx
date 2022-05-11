@@ -49,7 +49,10 @@ export class App extends Component {
         />
 
         <Title>Contacts</Title>
-        <ContactFilter onInput={this.filterInputHandler} />
+        <ContactFilter
+          onInput={this.filterInputHandler}
+          value={this.state.filter}
+        />
         <ContactList
           contacts={this.contactAfterFilter()}
           deleteContact={this.deleteContact}

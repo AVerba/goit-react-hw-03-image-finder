@@ -20,11 +20,7 @@ export const ContactList = ({ contacts, deleteContact }) => {
     </ul>
   );
 
-  return contacts.length !== 0 ? (
-    renderList
-  ) : (
-    <Title>You have no contacts</Title>
-  );
+  return contacts.length !== 0 ? renderList : 'You have no contacts';
 };
 ContactList.propTypes = {
   contacts: PropTypes.arrayOf(
