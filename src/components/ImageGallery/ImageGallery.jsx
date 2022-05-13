@@ -26,9 +26,19 @@ export class ImageGallery extends Component {
   componentDidUpdate(prevProps, prevState) {
     const prevQuery = prevProps.searchQuery;
     const newQuery = this.props.searchQuery;
-    if (newQuery === prevQuery) {
-      return Notify.warning(`Please enter name of some images`);
+    const prevPage = prevState.currentPage;
+    const newPage = this.state.currentPage;
+
+    if (newQuery !== prevQuery) {
+      return this.fetchImages(newQuery);
+    } else {
+      if (newPage !== prevPage) {
+        return this.fetchImages(newQuery);
+      }
     }
+  }
+
+  fetchImages(newQuery) {
     imagesAPI
       .fetchImages(newQuery, this.state.currentPage)
       .then(newImages => {
@@ -36,30 +46,17 @@ export class ImageGallery extends Component {
         // console.log(newImages);
         this.setState(prevState => ({
           images: [...prevState.images, ...hits],
-          currentPage: prevState.currentPage + 1,
           status: Status.RESOLVED,
         }));
       })
       .catch(error => this.setState({ error, status: Status.REJECTED }));
-    // this.setState({ searchQuery: newQuery });
-    //
-    // this.fetchImages();
   }
 
-  fetchImages = () => {
-    console.log('newQuery');
-    imagesAPI
-      .fetchImages(this.state.searchQuery)
-      .then(({ hits }) => {
-        // const { hits } = newImages;
-        // console.log(hits);
-        this.setState(prevState => ({
-          images: [...prevState.images, ...hits],
-          currentPage: prevState.currentPage + 1,
-          status: Status.RESOLVED,
-        }));
-      })
-      .catch(error => this.setState({ error, status: Status.REJECTED }));
+  pageHandler = () => {
+    this.setState(prevState => ({
+      ...prevState,
+      currentPage: prevState.currentPage + 1,
+    }));
   };
 
   render() {
@@ -86,7 +83,7 @@ export class ImageGallery extends Component {
       return (
         <>
           <ul className={styles.ImageGallery}>hello</ul>;
-          <ButtonLoad title="Load more" onClick={this.fetchImages}></ButtonLoad>
+          <ButtonLoad title="Load more" onClick={this.pageHandler}></ButtonLoad>
         </>
       );
     }
