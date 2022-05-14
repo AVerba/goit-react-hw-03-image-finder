@@ -6,6 +6,7 @@ import imagesAPI from '../../Services/serviceApi';
 
 import styles from './ImageGallery.module.css';
 import { Title } from '../ui/Title';
+import { ImageGalleryItem } from './ImageGalleryItem';
 
 const Status = {
   IDLE: 'idle',
@@ -16,7 +17,7 @@ const Status = {
 
 export class ImageGallery extends Component {
   state = {
-    searchQuery: '',
+    searchQuery: this.props.searchQuery,
     images: [],
     currentPage: 1,
     error: null,
@@ -30,20 +31,34 @@ export class ImageGallery extends Component {
     const newPage = this.state.currentPage;
 
     if (newQuery !== prevQuery) {
-      return this.fetchImages(newQuery);
+      this.setState({
+        // searchQuery: newQuery,
+        // images: [],
+        // currentPage: 1,
+        // error: null,
+        status: Status.PENDING,
+      });
+
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth',
+      });
+      return this.fetchImages(newQuery, this.state.currentPage);
     } else {
       if (newPage !== prevPage) {
-        return this.fetchImages(newQuery);
+        this.setState({ status: Status.PENDING });
+        return this.fetchImages(newQuery, this.state.currentPage);
       }
     }
   }
 
-  fetchImages(newQuery) {
+  fetchImages(query, page) {
+    console.log(query, page);
     imagesAPI
-      .fetchImages(newQuery, this.state.currentPage)
-      .then(newImages => {
-        const { hits } = newImages;
-        // console.log(newImages);
+      .fetchImages(query, page)
+      .then(data => {
+        const { hits } = data;
+        console.log(data.hits);
         this.setState(prevState => ({
           images: [...prevState.images, ...hits],
           status: Status.RESOLVED,
@@ -80,9 +95,21 @@ export class ImageGallery extends Component {
     }
 
     if (status === 'resolved') {
+      const { images } = this.state;
+      console.log(images);
       return (
         <>
-          <ul className={styles.ImageGallery}>hello</ul>;
+          <ul className={styles.ImageGallery}>
+            {images.map(({ id, tags, webformatURL, largeImageURL }) => (
+              <ImageGalleryItem
+                key={id}
+                tags={tags}
+                src={webformatURL}
+                largeImageURL={largeImageURL}
+              />
+            ))}
+          </ul>
+          ;
           <ButtonLoad title="Load more" onClick={this.pageHandler}></ButtonLoad>
         </>
       );

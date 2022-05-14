@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 export const ButtonLoad = ({ title, onClick }) => {
   return (
-    <div className={styles.buttonContainer}>
+    <div className={styles.buttotContainer}>
       <button type="button" onClick={onClick} className={styles.buttonLoad}>
         {title}
       </button>

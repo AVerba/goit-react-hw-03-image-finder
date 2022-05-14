@@ -2,16 +2,16 @@ import { apiSettings } from './settings';
 
 const { BASE_URL, API_KEY } = apiSettings;
 
-function fetchImages({ searchQuery, currentPage }) {
-  return fetch(
-    `${BASE_URL}?key=${API_KEY}&q=${searchQuery}&per_page=12&page=${currentPage}`
-  ).then(response => {
-    if (response.ok) {
-      return response.json();
-    }
+async function fetchImages(searchQuery, currentPage) {
+  const response = await fetch(
+    `${BASE_URL}?key=${API_KEY}&q=${searchQuery}&page=${currentPage}&image_type=photo&orientation=horizontal&per_page=12`
+  );
 
-    return Promise.reject(new Error(`Нет покемона с именем ${searchQuery}`));
-  });
+  if (response.ok) {
+    return response.json();
+  }
+
+  return Promise.reject(new Error(`Нет покемона с именем ${searchQuery}`));
 }
 
 const api = {
