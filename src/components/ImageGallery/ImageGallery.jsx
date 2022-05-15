@@ -18,12 +18,12 @@ const Status = {
 export class ImageGallery extends Component {
   state = {
     status: Status.IDLE,
-    searchQuery: this.props.searchQuery,
     images: [],
     currentPage: 1,
     error: null,
     show: false,
     modalImageUrl: '',
+    length: 0,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -54,6 +54,7 @@ export class ImageGallery extends Component {
         this.setState(prevState => ({
           images: [...prevState.images, ...hits],
           status: Status.RESOLVED,
+          length: hits.length,
         }));
       })
       .catch(error => this.setState({ error, status: Status.REJECTED }));
@@ -65,7 +66,7 @@ export class ImageGallery extends Component {
       ...prevState,
       currentPage: prevState.currentPage + 1,
     }));
-    this.fetchImages(this.state.searchQuery, this.state.currentPage);
+    this.fetchImages(this.props.searchQuery, this.state.currentPage);
   };
 
   render() {
@@ -103,11 +104,18 @@ export class ImageGallery extends Component {
               />
             ))}
           </ul>
-          <ButtonLoad
-            className={styles.btnLoad}
-            title="Load more"
-            onClick={this.pageHandler}
-          ></ButtonLoad>
+          {this.state.length > 0 ? (
+            <ButtonLoad
+              className={styles.btnLoad}
+              title="Load more"
+              onClick={this.pageHandler}
+            ></ButtonLoad>
+          ) : (
+            <Title
+              className={styles.idleTitle}
+              title="No more images for this request"
+            />
+          )}
         </div>
       );
     }
