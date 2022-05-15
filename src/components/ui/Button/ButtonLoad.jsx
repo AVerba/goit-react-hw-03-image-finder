@@ -1,13 +1,13 @@
 import styles from './Button.module.css';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 
-export const ButtonLoad = ({ title, onClick }) => {
+export const ButtonLoad = ({ className, title, onClick }) => {
+  const classList = cx(styles.buttonLoad, className);
   return (
-    <div className={styles.buttotContainer}>
-      <button type="button" onClick={onClick} className={styles.buttonLoad}>
-        {title}
-      </button>
-    </div>
+    <button type="button" onClick={onClick} className={classList}>
+      {title}
+    </button>
   );
 };
 

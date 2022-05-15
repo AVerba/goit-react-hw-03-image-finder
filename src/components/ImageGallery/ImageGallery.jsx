@@ -17,38 +17,32 @@ const Status = {
 
 export class ImageGallery extends Component {
   state = {
+    status: Status.IDLE,
     searchQuery: this.props.searchQuery,
     images: [],
     currentPage: 1,
     error: null,
-    status: Status.IDLE,
+    show: false,
+    modalImageUrl: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
     const prevQuery = prevProps.searchQuery;
     const newQuery = this.props.searchQuery;
-    const prevPage = prevState.currentPage;
-    const newPage = this.state.currentPage;
 
     if (newQuery !== prevQuery) {
       this.setState({
-        // searchQuery: newQuery,
-        // images: [],
-        // currentPage: 1,
-        // error: null,
+        images: [],
+        currentPage: 1,
+        error: null,
         status: Status.PENDING,
       });
-
       window.scrollTo({
         top: document.documentElement.scrollHeight,
         behavior: 'smooth',
       });
+
       return this.fetchImages(newQuery, this.state.currentPage);
-    } else {
-      if (newPage !== prevPage) {
-        this.setState({ status: Status.PENDING });
-        return this.fetchImages(newQuery, this.state.currentPage);
-      }
     }
   }
 
@@ -56,9 +50,7 @@ export class ImageGallery extends Component {
     console.log(query, page);
     imagesAPI
       .fetchImages(query, page)
-      .then(data => {
-        const { hits } = data;
-        console.log(data.hits);
+      .then(({ hits }) => {
         this.setState(prevState => ({
           images: [...prevState.images, ...hits],
           status: Status.RESOLVED,
@@ -67,11 +59,13 @@ export class ImageGallery extends Component {
       .catch(error => this.setState({ error, status: Status.REJECTED }));
   }
 
-  pageHandler = () => {
+  pageHandler = event => {
+    event.preventDefault();
     this.setState(prevState => ({
       ...prevState,
       currentPage: prevState.currentPage + 1,
     }));
+    this.fetchImages(this.state.searchQuery, this.state.currentPage);
   };
 
   render() {
@@ -98,7 +92,7 @@ export class ImageGallery extends Component {
       const { images } = this.state;
       console.log(images);
       return (
-        <>
+        <div className={styles.bodyContainer}>
           <ul className={styles.ImageGallery}>
             {images.map(({ id, tags, webformatURL, largeImageURL }) => (
               <ImageGalleryItem
@@ -109,9 +103,12 @@ export class ImageGallery extends Component {
               />
             ))}
           </ul>
-          ;
-          <ButtonLoad title="Load more" onClick={this.pageHandler}></ButtonLoad>
-        </>
+          <ButtonLoad
+            className={styles.btnLoad}
+            title="Load more"
+            onClick={this.pageHandler}
+          ></ButtonLoad>
+        </div>
       );
     }
   }
