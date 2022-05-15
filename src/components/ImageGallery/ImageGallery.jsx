@@ -3,6 +3,7 @@ import { Notify } from 'notiflix';
 import { ButtonLoad } from '../ui/Button';
 import ImageLoader from '../ui/Loader/Loader';
 import imagesAPI from '../../Services/serviceApi';
+import PropTypes from 'prop-types';
 
 import styles from './ImageGallery.module.css';
 import { Title } from '../ui/Title';
@@ -136,3 +137,6 @@ export class ImageGallery extends Component {
     }
   }
 }
+ImageGallery.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+};
