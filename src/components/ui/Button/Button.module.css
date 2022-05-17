@@ -5,6 +5,7 @@
 }
 
 .buttonLoad {
+  display: flex-block;
   padding: 8px 16px;
   border-radius: 2px;
   background-color: #3f51b5;

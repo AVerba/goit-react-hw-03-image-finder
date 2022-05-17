@@ -1,34 +1,42 @@
-import styles from './Modal.module.css';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import styles from './Modal.module.css';
 
-export const Modal = ({ largeImg, onClose }) => {
-  const KeyPressHandler = event => {
-    if (event.code === 'Escape') {
-      onClose();
+export class Modal extends Component {
+  componentDidMount() {
+    window.addEventListener('keydown', this.pressKeyHandler);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.pressKeyHandler);
+  }
+
+  pressKeyHandler = e => {
+    if (e.code === 'Escape') {
+      this.props.onCloseModal();
     }
   };
 
-  const BackdropPressHandler = event => {
+  backdropClickHandler = event => {
     if (event.currentTarget === event.target) {
-      onClose();
+      this.props.onCloseModal();
     }
   };
-  useEffect(() => {
-    window.addEventListener('keydown', KeyPressHandler);
 
-    return window.removeEventListener('keydown', KeyPressHandler);
-  });
-
-  return (
-    <div className={styles.overlay} onClick={BackdropPressHandler}>
-      <div className={styles.modal}>
-        <img src={largeImg} alt="image" width="800" />
+  render() {
+    const { largeImageURL, tags } = this.props;
+    return (
+      <div className={styles.overlay} onClick={this.backdropClickHandler}>
+        <div className={styles.modal}>
+          <img src={largeImageURL} alt={tags} />
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
+
 Modal.propTypes = {
-  largeImg: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
+  onCloseModal: PropTypes.func.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
+  tags: PropTypes.string.isRequired,
 };

@@ -5,22 +5,25 @@ export const ImageGalleryItem = ({
   tags,
   src,
   largeImageURL,
-  clickImageHandler,
+  openModalHandler,
 }) => {
+  const clickImageHandler = (largeImageURL, tags) => {
+    openModalHandler(largeImageURL, tags);
+  };
   return (
-    <li className={styles.ImageGalleryItem}>
+    <li className={styles.imageGalleryItem}>
       <img
         src={src}
         alt={tags}
-        className={styles.ItemImage}
-        onClick={() => clickImageHandler(largeImageURL)}
+        className={styles.itemImage}
+        onClick={() => clickImageHandler(largeImageURL, tags)}
       />
     </li>
   );
 };
 ImageGalleryItem.propTypes = {
-  tags: PropTypes.string.isRequired,
   src: PropTypes.string.isRequired,
   largeImageURL: PropTypes.string.isRequired,
-  clickImageHandler: PropTypes.func.isRequired,
+  tags: PropTypes.string.isRequired,
+  openModalHandler: PropTypes.func.isRequired,
 };

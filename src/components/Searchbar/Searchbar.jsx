@@ -13,7 +13,6 @@ export class Searchbar extends Component {
       return Notify.warning(`Please enter a search query`);
     }
     this.props.onSubmit(this.state.searchQuery);
-    this.setState({ searchQuery: '' });
   };
   changeNameHandler = event => {
     this.setState({ searchQuery: event.currentTarget.value.toLowerCase() });
