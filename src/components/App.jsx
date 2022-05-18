@@ -6,7 +6,7 @@ import styles from './App.module.css';
 import { Title } from './ui/Title';
 import { Notify } from 'notiflix';
 import { ButtonLoad } from './ui/Button';
-import imagesAPI from '../Services/serviceApi';
+import imagesAPI from '../services/serviceApi';
 import { Modal } from './Modal';
 
 const Status = {
@@ -56,8 +56,18 @@ export class App extends Component {
     imagesAPI
       .fetchImages(query, page)
       .then(({ hits, totalHits }) => {
+        console.log(hits);
+        const composedImages = hits.map(
+          ({ id, webformatURL, tags, largeImageURL }) => ({
+            id,
+            webformatURL,
+            tags,
+            largeImageURL,
+          })
+        );
+        console.log(composedImages);
         this.setState(prevState => ({
-          images: [...prevState.images, ...hits],
+          images: [...prevState.images, ...composedImages],
           status: Status.RESOLVED,
           totalImages: totalHits,
         }));
@@ -68,10 +78,8 @@ export class App extends Component {
   formSubmitHandler = searchQuery => {
     this.setState({ searchQuery });
   };
-  pageHandler = event => {
-    event.preventDefault();
+  pageHandler = () => {
     this.setState(prevState => ({
-      ...prevState,
       currentPage: prevState.currentPage + 1,
     }));
   };

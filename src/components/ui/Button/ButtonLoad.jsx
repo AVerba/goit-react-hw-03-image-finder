@@ -12,6 +12,7 @@ export const ButtonLoad = ({ className, title, onClick }) => {
 };
 
 ButtonLoad.propTypes = {
+  className: PropTypes.string,
   title: PropTypes.string.isRequired,
-  onClick: PropTypes.func,
+  onClick: PropTypes.func.isRequired,
 };
