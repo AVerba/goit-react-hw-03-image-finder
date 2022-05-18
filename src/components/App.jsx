@@ -56,7 +56,6 @@ export class App extends Component {
     imagesAPI
       .fetchImages(query, page)
       .then(({ hits, totalHits }) => {
-        console.log(hits);
         const composedImages = hits.map(
           ({ id, webformatURL, tags, largeImageURL }) => ({
             id,
@@ -65,7 +64,6 @@ export class App extends Component {
             largeImageURL,
           })
         );
-        console.log(composedImages);
         this.setState(prevState => ({
           images: [...prevState.images, ...composedImages],
           status: Status.RESOLVED,
